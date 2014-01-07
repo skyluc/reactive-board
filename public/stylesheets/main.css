@@ -1,0 +1,32 @@
+#board {
+  display: inline-block;
+  vertical-align: top;
+}
+
+#board-container {
+  height: 20em;
+  width: 40em;
+  border: solid 1px #CCCCCC;
+  padding: 0.2em;
+  overflow: auto;
+}
+
+#msg-input {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.message {
+  margin-bottom: 0.2em;
+}
+
+.msg-name {
+  color: white;
+  background-color: #888888;
+  font-size: 0.8em;
+  padding: 1px;
+}
+
+.msg-input.* {
+  vertical-align: top;
+}
