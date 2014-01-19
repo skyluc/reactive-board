@@ -1,4 +1,4 @@
-@(messages: List[model.Message])
+@(messages: List[model.Message], name: String)
 
 @main("Welcome to Play") {
 	
@@ -15,7 +15,7 @@
       <div>
       <form name="addMessage" action="form" method="get">
       <p>Enter your message:</p>
-      <p>Name: <input type="text" id="input-name" name="name"/></p>
+      <p>Name: <input type="text" id="input-name" name="name" value="@name"/></p>
       <p>Message: <textarea id="input-text" name="text"></textarea></p>
       <p><input type="submit" id="input-send" value="Send"/></p>
       </form>

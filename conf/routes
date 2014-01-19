@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET    /               controllers.Application.index
+GET    /               controllers.Application.index(name: Option[String])
 GET   /form           controllers.Application.form(name, text)
 
 # Map static resources from the /public folder to the /assets URL path

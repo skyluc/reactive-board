@@ -9,15 +9,15 @@ import model.Message
 
 object Application extends Controller {
 
-  def index = Action.async {
+  def index(name: Option[String]) = Action.async {
     Board.getLatestMessages.map { messages =>
-      Ok(views.html.index(messages))
+      Ok(views.html.index(messages, name.getOrElse("")))
     }
   }
   
   def form(name: String, text: String) = Action {
     Board.addMessage(Message(name, text))
-    Redirect("/")
+    Redirect("/", Map("name" -> List(name)))
   }
 
 }
