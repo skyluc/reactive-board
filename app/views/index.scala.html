@@ -6,9 +6,7 @@
   <div id="outer">
     <div id="board">
       <div id="board-container">
-      @messages.map{m =>
-      	<div class="message"><span class="msg-name">@m.name</span> - <span class="msg-text">@m.text</span></div>
-      }
+      @messages.map{m => @message(m)}
       </div>
     </div>
     <div id="msg-input">
