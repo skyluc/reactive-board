@@ -39,6 +39,8 @@ object Application extends Controller {
     val in = Iteratee.foreach[String] {
       msg =>
         userActor ! msg
+    }.map { _ =>
+        userActor ! User.ClientConnectionLost
     }
 
     (in, out)
