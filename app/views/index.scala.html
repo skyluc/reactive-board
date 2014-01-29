@@ -6,7 +6,6 @@
   <div id="outer">
     <div id="board">
       <div id="board-container">
-      @messages.map{m => @message(m)}
       </div>
     </div>
     <div id="msg-input">
@@ -20,4 +19,6 @@
       </div>
     </div>
   </div>
+
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/websocket.js")"></script>
 }

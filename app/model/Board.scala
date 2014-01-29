@@ -11,12 +11,14 @@ import scala.util.Success
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.Actor
 import akka.actor.Props
+import akka.actor.ActorRef
 
 object Board {
 
   case object LatestMessages
   case class Messages(messages: List[Message])
   case class AddMessage(message: Message)
+  case class RegisterUser(user: ActorRef)
 
   def getLatestMessages: Future[List[Message]] = {
     val system = Akka.system
@@ -55,11 +57,16 @@ class Board extends Actor {
   import Board._
   
   var messages = List[Message]()
+  var users = Set[ActorRef]()
   
   override def receive = {
     case LatestMessages =>
       sender ! Messages(messages.take(10).reverse)
     case AddMessage(message) =>
       messages = message :: messages
+      users.foreach(_ ! Messages(List(message)))
+    case RegisterUser(user) =>
+      users += user
+      user ! Messages(messages.take(10).reverse)
   }
 }
