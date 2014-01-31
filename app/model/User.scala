@@ -32,7 +32,7 @@ class User(channel: Concurrent.Channel[String], board: ActorSelection) extends A
 
 object User {
 
-  val messageRegex = "msg:([^:]*):(.*)".r
+  val messageRegex = "(?s)msg:([^:]*):(.*)".r
   object ClientConnectionLost
 
   def props(channel: Concurrent.Channel[String], board: ActorSelection) =

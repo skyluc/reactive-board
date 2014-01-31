@@ -25,6 +25,15 @@
   background-color: #888888;
   font-size: 0.8em;
   padding: 1px;
+  vertical-align:top;
+}
+
+.msg-separator {
+  vertical-align:top;
+}
+
+.msg-text {
+  display: inline-block;
 }
 
 .msg-input.* {
