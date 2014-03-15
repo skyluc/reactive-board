@@ -11,6 +11,8 @@ import play.api.libs.iteratee.Iteratee
 import views.html.message
 import play.libs.Akka
 import model.User
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
 
 object Application extends Controller {
 
@@ -25,8 +27,8 @@ object Application extends Controller {
     Redirect("/", Map("name" -> List(name)))
   }
 
-  def ws() = WebSocket.using[String] { request =>
-    val (out, channel) = Concurrent.broadcast[String]
+  def ws() = WebSocket.using[JsValue] { request =>
+    val (out, channel) = Concurrent.broadcast[JsValue]
 
     val system = Akka.system()
 
@@ -34,11 +36,11 @@ object Application extends Controller {
 
     val userActor = system.actorOf(User.props(channel, boardActor))
 
-    channel.push(message(new Message("me", "test")).body)
-
-    val in = Iteratee.foreach[String] {
+    val in = Iteratee.foreach[JsValue] {
       msg =>
-        userActor ! msg
+        import model.Action
+        import model.ActionJson._
+        userActor ! Json.fromJson[Action](msg)
     }.map { _ =>
         userActor ! User.ClientConnectionLost
     }

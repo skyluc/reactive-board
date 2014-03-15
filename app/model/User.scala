@@ -7,20 +7,23 @@ import akka.actor.Props
 import akka.actor.ActorSelection
 import views.html.message
 import akka.actor.PoisonPill
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
 
-class User(channel: Concurrent.Channel[String], board: ActorSelection) extends Actor {
+class User(channel: Concurrent.Channel[JsValue], board: ActorSelection) extends Actor {
 
   def receive = {
-    case "go:" =>
+    case Action("go", _, _, _) =>
       board ! Board.SubscribeAndGetAll
-    case User.messageRegex(user, text) =>
+    case Action("msg", Some(user), Some(text), _) =>
       board ! Board.AddMessage(Message(user, text))
     case User.ClientConnectionLost =>
       board ! Board.Unsubscribe
       self ! PoisonPill
     case Board.Messages(messages) =>
       messages.foreach { m =>
-        channel.push(message(m).body)
+        import model.ActionJson._
+        channel.push(Json.toJson(Action("msg", Some(m.name), Some(m.text), None)))
       }
   }
 
@@ -32,10 +35,9 @@ class User(channel: Concurrent.Channel[String], board: ActorSelection) extends A
 
 object User {
 
-  val messageRegex = "(?s)msg:([^:]*):(.*)".r
   object ClientConnectionLost
 
-  def props(channel: Concurrent.Channel[String], board: ActorSelection) =
+  def props(channel: Concurrent.Channel[JsValue], board: ActorSelection) =
     Props(classOf[User], channel, board)
 
 }
