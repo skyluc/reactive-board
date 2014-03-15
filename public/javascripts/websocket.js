@@ -39,13 +39,13 @@ function actionEditors(msg) {
 	
 	var editorsString = "";
 	
-	var editors = msg.editors;
+	var editors = msg.content;
 	for (i = 0; i < editors.length; i++) {
-		editorsString = editorStrings + editors[i] + ","
+		editorsString = editorsString + editors[i] + ","
 	}
 	
 	var board = document.getElementById("board-editors");
-	board.innerHTML = editorString;
+	board.innerHTML = editorsString;
 }
 
 function sendMessage() {
@@ -65,7 +65,7 @@ function textFocus() {
 	var inputName = document.getElementById("input-name").value;
 	
 	var action = {
-			  "id" : "focus",
+			  "id" : "edit",
 			  "name" : inputName,
 			  "focus" : true
 			};
@@ -77,7 +77,7 @@ function textBlur() {
 	var inputName = document.getElementById("input-name").value;
 	
 	var action = {
-			  "id" : "focus",
+			  "id" : "edit",
 			  "name" : inputName,
 			  "focus" : false
 			};

@@ -14,15 +14,15 @@ object ActionJson {
     (JsPath \ "id").read[String] and
     (JsPath \ "name").readNullable[String] and
     (JsPath \ "text").readNullable[String] and
-    (JsPath \ "typing").readNullable[Boolean])(Action.apply _)
+    (JsPath \ "focus").readNullable[Boolean])(Action.apply _)
 
   implicit val actionWrites: Writes[Action] = (
     (JsPath \ "id").write[String] and
     (JsPath \ "name").writeNullable[String] and
     (JsPath \ "text").writeNullable[String] and
-    (JsPath \ "typing").writeNullable[Boolean])(unlift(Action.unapply))
+    (JsPath \ "focus").writeNullable[Boolean])(unlift(Action.unapply))
 
   implicit val actionExt: Writes[ActionExt] = (
     (JsPath \ "id").write[String] and
-    (JsPath \ "typing").write[List[String]])(unlift(ActionExt.unapply))
+    (JsPath \ "content").write[List[String]])(unlift(ActionExt.unapply))
 }
