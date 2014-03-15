@@ -7,12 +7,14 @@
     <div id="board">
       <div id="board-container">
       </div>
+      <div id="board-editors">
+      </div>
     </div>
     <div id="msg-input">
       <div>
       <p>Enter your message:</p>
       <p>Name: <input type="text" id="input-name" name="name" value="@name"/></p>
-      <p>Message: <textarea id="input-text" name="text"></textarea></p>
+      <p>Message: <textarea id="input-text" name="text" onFocus="textFocus()" onBlur="textBlur()"></textarea></p>
       <p><input type="submit" id="input-send" value="Send" onClick="sendMessage()"/></p>
       </div>
     </div>

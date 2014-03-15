@@ -17,6 +17,10 @@ class User(channel: Concurrent.Channel[JsValue], board: ActorSelection) extends 
       board ! Board.SubscribeAndGetAll
     case Action("msg", Some(user), Some(text), _) =>
       board ! Board.AddMessage(Message(user, text))
+    case Action("edit", Some(name), _, Some(true)) =>
+      board ! Board.StartEdit(name)
+    case Action("edit", Some(name), _, Some(false)) =>
+      board ! Board.StopEdit(name)
     case User.ClientConnectionLost =>
       board ! Board.Unsubscribe
       self ! PoisonPill
@@ -25,6 +29,9 @@ class User(channel: Concurrent.Channel[JsValue], board: ActorSelection) extends 
         import model.ActionJson._
         channel.push(Json.toJson(Action("msg", Some(m.name), Some(m.text), None)))
       }
+    case Board.Editors(editors) =>
+      import model.ActionJson._
+      channel.push(Json.toJson(ActionExt("editors", editors)))
   }
 
   override def postStop() {

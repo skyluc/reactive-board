@@ -6,6 +6,8 @@ function action(msgString) {
 	
 	if (msg.id == "msg") {
 		actionMsg(msg);
+	} else if (msg.id == "editors") {
+		actionEditors(msg);
 	}
 }
 
@@ -17,7 +19,7 @@ function actionMsg(msg) {
     var spanName = document.createElement("span");
     spanName.className = "msg-name";
     spanName.appendChild(document.createTextNode(msg.name));
-    divMessage.appendChild(spanName)
+    divMessage.appendChild(spanName);
 
     var spanSeparator = document.createElement("span");
     spanSeparator.className = "msg-separator";
@@ -33,6 +35,19 @@ function actionMsg(msg) {
 	board.appendChild(divMessage);
 }
 
+function actionEditors(msg) {
+	
+	var editorsString = "";
+	
+	var editors = msg.editors;
+	for (i = 0; i < editors.length; i++) {
+		editorsString = editorStrings + editors[i] + ","
+	}
+	
+	var board = document.getElementById("board-editors");
+	board.innerHTML = editorString;
+}
+
 function sendMessage() {
 	var inputName = document.getElementById("input-name").value;
 	var inputText = document.getElementById("input-text").value;
@@ -41,9 +56,33 @@ function sendMessage() {
 	  "id" : "msg",
 	  "name" : inputName,
 	  "text" : inputText
-	}
+	};
 
-	socket.send(JSON.stringify(action))
+	socket.send(JSON.stringify(action));
+}
+
+function textFocus() {
+	var inputName = document.getElementById("input-name").value;
+	
+	var action = {
+			  "id" : "focus",
+			  "name" : inputName,
+			  "focus" : true
+			};
+
+			socket.send(JSON.stringify(action));
+}
+
+function textBlur() {
+	var inputName = document.getElementById("input-name").value;
+	
+	var action = {
+			  "id" : "focus",
+			  "name" : inputName,
+			  "focus" : false
+			};
+
+	socket.send(JSON.stringify(action));
 }
 
 function createWebSocket() {

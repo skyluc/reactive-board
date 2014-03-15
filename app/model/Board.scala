@@ -18,6 +18,9 @@ object Board {
   case object LatestMessages
   case class Messages(messages: List[Message])
   case class AddMessage(message: Message)
+  case class StartEdit(name: String)
+  case class StopEdit(name: String)
+  case class Editors(editors: List[String])
   case object SubscribeAndGetAll
   case object Unsubscribe
 
@@ -58,6 +61,7 @@ class Board extends Actor {
   import Board._
   
   var messages = List[Message]()
+  var editors = List[String]()
   var users = Set[ActorRef]()
   
   override def receive = {
@@ -69,7 +73,14 @@ class Board extends Actor {
     case SubscribeAndGetAll =>
       users += sender
       sender ! Messages(messages.take(10).reverse)
+      sender ! Editors(editors)
     case Unsubscribe =>
       users -= sender
+    case StartEdit(name) =>
+      editors :+= name
+      users.foreach(_ ! Editors(editors))
+    case StopEdit(name) =>
+      editors = editors diff List(name)
+      users.foreach(_ ! Editors(editors))
   }
 }

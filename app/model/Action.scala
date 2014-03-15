@@ -6,6 +6,8 @@ import play.api.libs.functional.syntax._
 
 case class Action(id: String, name: Option[String], text: Option[String], typing: Option[Boolean])
 
+case class ActionExt(id: String, content: List[String])
+
 object ActionJson {
 
   implicit val messageReads: Reads[Action] = (
@@ -20,4 +22,7 @@ object ActionJson {
     (JsPath \ "text").writeNullable[String] and
     (JsPath \ "typing").writeNullable[Boolean])(unlift(Action.unapply))
 
+  implicit val actionExt: Writes[ActionExt] = (
+    (JsPath \ "id").write[String] and
+    (JsPath \ "typing").write[List[String]])(unlift(ActionExt.unapply))
 }
