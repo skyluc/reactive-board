@@ -2,14 +2,14 @@ var socket;
 
 function action(msgString) {
 
-	var msg = JSON.parse(msgText);
+	var msg = JSON.parse(msgString);
 	
 	if (msg.id == "msg") {
 		actionMsg(msg);
 	}
 }
 
-function actionMsg(msg)
+function actionMsg(msg) {
 
     var divMessage = document.createElement("div");
     divMessage.className = "message";
@@ -22,7 +22,7 @@ function actionMsg(msg)
     var spanSeparator = document.createElement("span");
     spanSeparator.className = "msg-separator";
     spanSeparator.appendChild(document.createTextNode(" - "));
-    divMessage.appendSeparator(spanName)
+    divMessage.appendChild(spanSeparator)
     
     var divText = document.createElement("div");
     divText.className = "msg-text";

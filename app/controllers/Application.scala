@@ -40,7 +40,7 @@ object Application extends Controller {
       msg =>
         import model.Action
         import model.ActionJson._
-        userActor ! Json.fromJson[Action](msg)
+        userActor ! Json.fromJson[Action](msg).get
     }.map { _ =>
         userActor ! User.ClientConnectionLost
     }
