@@ -19,7 +19,7 @@ object Board {
   case class Messages(messages: List[Message])
   case class AddMessage(message: Message)
   case class StartEdit(name: String)
-  case class StopEdit(name: String)
+  case object StopEdit
   case class Editors(editors: List[String])
   case object SubscribeAndGetAll
   case object Unsubscribe
@@ -82,7 +82,7 @@ class Board extends Actor {
     case StartEdit(name) =>
       editorsMap += sender -> name
       users.foreach(_ ! Editors(editors))
-    case StopEdit(name) =>
+    case StopEdit =>
       editorsMap -= sender
       users.foreach(_ ! Editors(editors))
   }

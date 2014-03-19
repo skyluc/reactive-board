@@ -1,7 +1,0 @@
-@(message: model.Message)<div class="message">
-  <span class="msg-name">@message.name</span>
-  <span class="msg-separator"> - </span>
-  <div class="msg-text">@for(line <- message.text.split("\n")) {
-    @line<br/>
-}</div>
-</div>
