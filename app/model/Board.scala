@@ -61,8 +61,10 @@ class Board extends Actor {
   import Board._
   
   var messages = List[Message]()
-  var editors = List[String]()
+  var editorsMap = Map[ActorRef, String]()
   var users = Set[ActorRef]()
+
+  def editors = editorsMap.values.to[List]
   
   override def receive = {
     case LatestMessages =>
@@ -76,11 +78,12 @@ class Board extends Actor {
       sender ! Editors(editors)
     case Unsubscribe =>
       users -= sender
+      editorsMap -= sender
     case StartEdit(name) =>
-      editors :+= name
+      editorsMap += sender -> name
       users.foreach(_ ! Editors(editors))
     case StopEdit(name) =>
-      editors = editors diff List(name)
+      editorsMap -= sender
       users.foreach(_ ! Editors(editors))
   }
 }

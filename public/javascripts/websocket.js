@@ -28,7 +28,7 @@ function actionMsg(msg) {
     
     var divText = document.createElement("div");
     divText.className = "msg-text";
-    divText.appendChild(document.createTextNode(msg.text));
+    divText.appendChild(document.createTextNode(msg.data));
     divMessage.appendChild(divText)
 
 	var board = document.getElementById("board-container");
@@ -37,15 +37,8 @@ function actionMsg(msg) {
 
 function actionEditors(msg) {
 	
-	var editorsString = "";
-	
-	var editors = msg.content;
-	for (i = 0; i < editors.length; i++) {
-		editorsString = editorsString + editors[i] + ","
-	}
-	
 	var board = document.getElementById("board-editors");
-	board.innerHTML = editorsString;
+	board.innerHTML = msg.data;
 }
 
 function sendMessage() {
@@ -55,7 +48,7 @@ function sendMessage() {
 	var action = {
 	  "id" : "msg",
 	  "name" : inputName,
-	  "text" : inputText
+	  "data" : inputText
 	};
 
 	socket.send(JSON.stringify(action));
@@ -92,6 +85,7 @@ function createWebSocket() {
 	socket.onopen = function() {
 		console.log("websocket open");
 		var board = document.getElementById("board-container");
+		var board = document.getElementById("board-editors");
 		board.innerHTML = "";
 		var action = {
 			"id" : "go"

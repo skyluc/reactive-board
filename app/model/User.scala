@@ -31,7 +31,7 @@ class User(channel: Concurrent.Channel[JsValue], board: ActorSelection) extends 
       }
     case Board.Editors(editors) =>
       import model.ActionJson._
-      channel.push(Json.toJson(ActionExt("editors", editors)))
+      channel.push(Json.toJson(Action("editors", None, Some(editors.mkString(", ")), None)))
   }
 
   override def postStop() {
