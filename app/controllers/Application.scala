@@ -29,7 +29,7 @@ object Application extends Controller {
 
     val system = Akka.system()
     
-    val board = system.actorSelection("user/board")
+    val board = system.actorSelection(Play.current.configuration.getString("board.controller.path").get)
     
     val userActor = system.actorOf(User.props(channel, board))
     
