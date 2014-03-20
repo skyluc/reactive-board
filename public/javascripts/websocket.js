@@ -6,6 +6,10 @@ function action(msgString) {
 	
 	// ---
 	
+	if (msg.id = "message") {
+		addMessage(msg.name, msg.data)
+	}
+	
 }
 
 function sendMessage() {
@@ -14,6 +18,14 @@ function sendMessage() {
 
 	// ---
 
+    var action = {
+			id : "message",
+			name : inputName,
+			data : inputText
+		}
+		
+		socket.send(JSON.stringify(action))
+	
 }
 
 function textFocus() {
@@ -42,12 +54,17 @@ function createWebSocket() {
 		beditors.innerHTML = ""
 	
 	    // ---
+	    var action = {
+			id : "go"
+		}
+		
+		socket.send(JSON.stringify(action))
 
 	}
 
 	socket.onmessage = function(event) {
 		// ---
-
+        action(event.data)
 	}
 
 	socket.onclose = function() {
