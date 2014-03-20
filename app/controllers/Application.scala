@@ -15,10 +15,8 @@ import play.api.libs.json.Json
 
 object Application extends Controller {
 
-  def index(name: Option[String]) = Action.async {
-    Board.getLatestMessages.map { messages =>
-      Ok(views.html.index(messages, name.getOrElse("")))
-    }
+  def index(name: Option[String]) = Action {
+    Ok(views.html.index(name.getOrElse("")))
   }
 
   def form(name: String, text: String) = Action {
@@ -26,16 +24,25 @@ object Application extends Controller {
     Redirect("/", Map("name" -> List(name)))
   }
 
-}
+  def ws = WebSocket.using[JsValue] { request =>
+    val (out, channel) = Concurrent.broadcast[JsValue]
 
-//WebSocket.using[JsValue] { request =>
-//    val (out, channel) = Concurrent.broadcast[JsValue]
-//
-//    val in = Iteratee.foreach[JsValue] {
-//      msg =>
-//        ???
-//    }.map { _ =>
-//      ???
-//    }
-//
-//    (in, out)
+    val system = Akka.system()
+    
+    val board = system.actorSelection("user/board")
+    
+    val userActor = system.actorOf(User.props(channel, board))
+    
+    val in = Iteratee.foreach[JsValue] {
+      msg =>
+        import model.Action
+        import model.ActionJson._
+        userActor ! Json.fromJson[Action](msg).get
+    }.map { _ =>
+      userActor ! User.ClientConnectionLost
+    }
+
+    (in, out)
+  }
+
+}

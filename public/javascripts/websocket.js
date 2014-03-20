@@ -6,6 +6,13 @@ function action(msgString) {
 	
 	// ---
 	
+	if (msg.id == "message") {
+		addMessage(msg.name, msg.data)
+	} else if (msg.id == "editors") {
+		setEditors(msg.data)
+	}
+		
+	
 }
 
 function sendMessage() {
@@ -13,6 +20,14 @@ function sendMessage() {
 	var inputText = document.getElementById("input-text").value;
 
 	// ---
+	
+	var action = {
+		id : "message",
+		name : inputName,
+		data : inputText
+	}
+	
+	socket.send(JSON.stringify(action))
 
 }
 
@@ -20,13 +35,25 @@ function textFocus() {
 	var inputName = document.getElementById("input-name").value;
 
 	// ---
-
+	var action = {
+		id : "typing",
+		name : inputName,
+		focus : true
+	}
+	
+	socket.send(JSON.stringify(action))
 }
 
 function textBlur() {
 	var inputName = document.getElementById("input-name").value;
 
 	// ---
+	var action = {
+			id : "typing",
+			focus : false
+	}
+	
+	socket.send(JSON.stringify(action))
 
 }
 
@@ -42,11 +69,18 @@ function createWebSocket() {
 		beditors.innerHTML = ""
 	
 	    // ---
+			
+		var action = {
+			id : "go"
+		}
+		
+		socket.send(JSON.stringify(action))
 
 	}
 
 	socket.onmessage = function(event) {
 		// ---
+		action(event.data)
 
 	}
 

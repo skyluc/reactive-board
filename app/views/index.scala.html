@@ -1,4 +1,4 @@
-@(messages: List[model.Message], name: String)
+@(name: String)
 
 @main("Reactive Board !") {
 	
@@ -6,24 +6,19 @@
   <div id="outer">
     <div id="board">
       <div id="board-container">
-       @messages.map{m =>
-      	<div class="message"><span class="msg-name">@m.name</span> - <span class="msg-text">@m.text</span></div>
-      }
       </div>
       <div id="board-editors">
       </div>
     </div>
     <div id="msg-input">
       <div>
-      <form name="addMessage" action="form" method="get">
       <p>Enter your message:</p>
       <p>Name: <input type="text" id="input-name" name="name" value="@name"/></p>
-      <p>Message: <textarea id="input-text" name="text"></textarea></p>
-      <p><input type="submit" id="input-send" value="Send"/></p>
-      </form>
+      <p>Message: <textarea id="input-text" name="text" onFocus="textFocus()" onBlur="textBlur()"></textarea></p>
+      <p><input type="submit" id="input-send" value="Send" onClick="sendMessage()"/></p>
       </div>
     </div>
   </div>
 
-  <!--<script type="text/javascript" src="@routes.Assets.at("javascripts/websocket.js")"></script>-->
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/websocket.js")"></script>
 }
