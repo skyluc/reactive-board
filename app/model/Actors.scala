@@ -4,6 +4,7 @@ import play.api.Application
 import play.api.Plugin
 import play.api.libs.concurrent.Akka
 import akka.actor.ActorRef
+import play.api.Play
 
 /**
  * Lookup for actors used by the web front end.
@@ -16,7 +17,7 @@ object Actors {
   /**
    * Get the board.
    */
-  def board(implicit app: Application): ActorRef = actors.board
+  def board(implicit app: Application) = actors.board
 }
 
 /**
@@ -29,9 +30,11 @@ class Actors(app: Application) extends Plugin {
   private def system = Akka.system(app)
 
   override def onStart() = {
+    val board = system.actorOf(Board.props, "board")
+    
     board ! Board.AddMessage(Message("SkyLuc", "Hello, there!"))
     board ! Board.AddMessage(Message("TROLL", "Ur wAPP !PRETTY"))
   }
 
-  private lazy val board = system.actorOf(Board.props, "board")
+  private lazy val board = system.actorSelection(Play.current.configuration.getString("board.controller.path").get)
 }

@@ -12,13 +12,19 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.Actor
 import akka.actor.Props
 import play.api.Application
+import akka.actor.ActorRef
 
 object Board {
   
   case object LatestMessages
   case class Messages(messages: List[Message])
   case class AddMessage(message: Message)
-    
+  case class StartEdit(name: String)
+  case class StopEdit(name: String)
+  case class Editors(editors: List[String])
+  case object SubscribeAndGetAll
+  case object Unsubscribe
+  
   def getLatestMessages(implicit app: Application): Future[List[Message]] = {
     implicit val timeout = Timeout(5.seconds)
     
@@ -51,11 +57,29 @@ class Board extends Actor {
   import Board._
   
   var messages = List[Message]()
+  var editorsMap = Map[ActorRef, String]()
+  var users = Set[ActorRef]()
+
+  def editors = editorsMap.values.to[List]
   
   override def receive = {
     case LatestMessages =>
       sender ! Messages(messages.take(10).reverse)
     case AddMessage(message) =>
       messages = message :: messages
+      users.foreach(_ ! Messages(List(message)))
+    case SubscribeAndGetAll =>
+      users += sender
+      sender ! Messages(messages.take(10).reverse)
+      sender ! Editors(editors)
+    case Unsubscribe =>
+      users -= sender
+      editorsMap -= sender
+    case StartEdit(name) =>
+      editorsMap += sender -> name
+      users.foreach(_ ! Editors(editors))
+    case StopEdit(name) =>
+      editorsMap -= sender
+      users.foreach(_ ! Editors(editors))
   }
 }

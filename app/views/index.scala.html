@@ -5,18 +5,17 @@
   <h1>Reactive Board</h1>
   <div id="outer">
     <div id="board">
-      <div id="board-container">
-      @messages.map{m => @message(m)}
+      <div id="board-messages">
+      </div>
+      <div id="board-editors">
       </div>
     </div>
     <div id="msg-input">
       <div>
-      <form name="addMessage" action="form" method="get">
       <p>Enter your message:</p>
       <p>Name: <input type="text" id="input-name" name="name" value="@name"/></p>
-      <p><textarea id="input-text" name="text"></textarea></p>
-      <p><input type="submit" id="input-send" value="Send"/></p>
-      </form>
+      <p><textarea id="input-text" name="text" onFocus="textFocus()" onBlur="textUnfocus()"></textarea></p>
+      <p><input type="submit" id="input-send" value="Send" onClick="sendNewMessage()"/></p>
       </div>
     </div>
   </div>
