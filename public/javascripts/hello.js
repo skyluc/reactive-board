@@ -91,12 +91,12 @@ function connect() {
 
 	socket.onclose = function() {
 		console.log("web socket closed");
-		setTimeout(createWebSocket, 1000);
+		setTimeout(connect, 1000);
 	}
 
 	socket.onError = function() {
 		console.log("web socket error");
-		setTimeout(createWebSocket, 1000);
+		setTimeout(connect, 1000);
 	}	
 }
 
