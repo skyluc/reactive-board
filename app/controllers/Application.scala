@@ -10,10 +10,8 @@ object Application extends Controller {
   
   import Play.current
   
-  def index(name: Option[String]) = Action.async {
-    Board.getLatestMessages.map { messages =>
-      Ok(views.html.index(messages, name.getOrElse("")))
-    }
+  def index(name: Option[String]) = Action {
+        Ok(views.html.index(name.getOrElse("")))
   }
 
   def form(name: String, text: String) = Action {
